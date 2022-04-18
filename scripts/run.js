@@ -1,24 +1,76 @@
 const main = async () => {
-  const [owner, randomPerson] = await hre.ethers.getSigners();
-  const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
-  const waveContract = await waveContractFactory.deploy();
-  await waveContract.deployed();
+  const factory = await hre.ethers.getContractFactory("WavesVsFists");
+  const wavesVsFistsContract = await factory.deploy({
+    value: hre.ethers.utils.parseEther("0.1"),
+  });
+  await wavesVsFistsContract.deployed();
+  console.log("Contract addy:", wavesVsFistsContract.address);
+  let contractBalance = await hre.ethers.provider.getBalance(
+    wavesVsFistsContract.address
+  );
 
-  console.log("Contract deployed to:", waveContract.address);
-  console.log("Contract deployed by:", owner.address);
+  console.log(
+    "Contract balance:",
+    hre.ethers.utils.formatEther(contractBalance)
+  );
+
+  const [_, randomPerson, randomPerson2] = await hre.ethers.getSigners();
 
   let waveCount;
-  waveCount = await waveContract.getTotalWaves();
+  waveCount = await wavesVsFistsContract.getTotalWaves();
+  console.log(waveCount.toNumber());
 
-  let waveTxn = await waveContract.wave();
+  // let waveTxn = await wavesVsFistsContract.wave("A message!");
+  // await waveTxn.wait();
+
+  waveTxn = await wavesVsFistsContract
+    .connect(randomPerson)
+    .wave("Another message!");
   await waveTxn.wait();
 
-  waveCount = await waveContract.getTotalWaves();
+  // waveTxn = await wavesVsFistsContract
+  //   .connect(randomPerson2)
+  //   .wave("Another message 2!");
+  // await waveTxn.wait();
 
-  waveTxn = await waveContract.connect(randomPerson).wave();
+  let allWaves = await wavesVsFistsContract.getAllWaves();
+  console.log(allWaves);
+
+  contractBalance = await hre.ethers.provider.getBalance(
+    wavesVsFistsContract.address
+  );
+  console.log(
+    "Contract balance:",
+    hre.ethers.utils.formatEther(contractBalance)
+  );
+
+  let fistCount;
+  fistCount = await wavesVsFistsContract.getTotalFists();
+  console.log(fistCount.toNumber());
+
+  // let fistTxn = await wavesVsFistsContract.fist("A message!");
+  // await fistTxn.wait();
+
+  // fistTxn = await wavesVsFistsContract
+  //   .connect(randomPerson)
+  //   .fist("Another message!");
+  // await waveTxn.wait();
+
+  fistTxn = await wavesVsFistsContract
+    .connect(randomPerson2)
+    .fist("Another message 2!");
   await waveTxn.wait();
 
-  waveCount = await waveContract.getTotalWaves();
+  let allFists = await wavesVsFistsContract.getAllFists();
+  console.log(allFists);
+
+  contractBalance = await hre.ethers.provider.getBalance(
+    wavesVsFistsContract.address
+  );
+  console.log(
+    "Contract balance:",
+    hre.ethers.utils.formatEther(contractBalance)
+  );
 };
 
 const runMain = async () => {
