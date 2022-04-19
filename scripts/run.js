@@ -18,7 +18,7 @@ const main = async () => {
 
   let waveCount;
   waveCount = await wavesVsFistsContract.getTotalWaves();
-  console.log(waveCount.toNumber());
+  console.log("Wave count:", waveCount.toNumber());
 
   // let waveTxn = await wavesVsFistsContract.wave("A message!");
   // await waveTxn.wait();
@@ -28,10 +28,10 @@ const main = async () => {
     .wave("Another message!");
   await waveTxn.wait();
 
-  // waveTxn = await wavesVsFistsContract
-  //   .connect(randomPerson2)
-  //   .wave("Another message 2!");
-  // await waveTxn.wait();
+  waveTxn = await wavesVsFistsContract
+    .connect(randomPerson2)
+    .wave("Another message 2!");
+  await waveTxn.wait();
 
   let allWaves = await wavesVsFistsContract.getAllWaves();
   console.log(allWaves);
@@ -46,7 +46,7 @@ const main = async () => {
 
   let fistCount;
   fistCount = await wavesVsFistsContract.getTotalFists();
-  console.log(fistCount.toNumber());
+  console.log("Fist count:", fistCount.toNumber());
 
   // let fistTxn = await wavesVsFistsContract.fist("A message!");
   // await fistTxn.wait();

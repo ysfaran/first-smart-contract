@@ -6,11 +6,12 @@ import "hardhat/console.sol";
 
 contract WavesVsFists {
     address private _owner;
-    mapping(address => bool) private _wallets;
+    uint256 private _seed;
 
     uint256 totalWaves;
     uint256 totalFists;
     uint256 prizeAmount = 0.0001 ether;
+    mapping(address => uint256) public lastWavedAt;
 
     event NewWave(address indexed from, uint256 timestamp, string message);
     event NewFist(address indexed from, uint256 timestamp, string message);
@@ -27,12 +28,13 @@ contract WavesVsFists {
     constructor() payable {
         console.log("Let the wave vs fist game begin!");
         _owner = msg.sender;
+        _seed = (block.timestamp + block.difficulty) % 100;
     }
 
     function wave(string memory _message) public {
         assertCanGreet();
 
-        _wallets[msg.sender] = true;
+        lastWavedAt[msg.sender] = block.timestamp;
 
         totalWaves++;
         waves.push(Greeting(msg.sender, _message, block.timestamp));
@@ -44,7 +46,6 @@ contract WavesVsFists {
     }
 
     function getTotalWaves() public view returns (uint256) {
-        console.log("Uuuuuh, already %d waves in total.", totalWaves);
         return totalWaves;
     }
 
@@ -55,7 +56,7 @@ contract WavesVsFists {
     function fist(string memory _message) public {
         assertCanGreet();
 
-        _wallets[msg.sender] = true;
+        lastWavedAt[msg.sender] = block.timestamp;
 
         totalFists++;
         fists.push(Greeting(msg.sender, _message, block.timestamp));
@@ -67,7 +68,6 @@ contract WavesVsFists {
     }
 
     function getTotalFists() public view returns (uint256) {
-        console.log("Strooong, already %d fists in total.", totalFists);
         return totalFists;
     }
 
@@ -78,6 +78,15 @@ contract WavesVsFists {
     function sendPrize() private {
         assertBalance();
 
+        _seed = (block.difficulty + block.timestamp + _seed) % 100;
+        console.log("Random # generated: %d", _seed);
+
+        if (_seed <= 50) return;
+
+        console.log(
+            "The randomness is on your side %s. You got a prize!",
+            msg.sender
+        );
         (bool success, ) = (msg.sender).call{value: prizeAmount}("");
         require(success, "Failed to withdraw money from contract.");
     }
@@ -88,8 +97,8 @@ contract WavesVsFists {
             "Owner is not allowed to wave or fist bump."
         );
         require(
-            !_wallets[msg.sender],
-            "Each wallet can only wave or fist bump once."
+            lastWavedAt[msg.sender] + 15 minutes < block.timestamp,
+            "Each wallet can only wave or fist bump once within 15 minutes."
         );
     }
 
