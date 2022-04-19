@@ -1,15 +1,8 @@
-# Basic Sample Hardhat Project
+# My First Smart Contract
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts.
+This is my first smart contract ever powered by [Buildspace](https://app.buildspace.so/).
 
-Try running some of the following tasks:
+It's deployed to Ethereum's rinkeby testnet and can be found on [Etherscan](https://rinkeby.etherscan.io/address/0x87C26c69F0991D23A45991B2fD81dFd394c68221).  
+The corresponding React web app is deployed via [Replit](https://replit.com/) and can be viewed [here](https://waveportal-starter-project.ysfaran.repl.co/).
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-node scripts/sample-script.js
-npx hardhat help
-```
+Feel free to check it out, it hopefully is pretty self-explanatory 🙂.
